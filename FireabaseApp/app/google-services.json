@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1038753180411",
+    "firebase_url": "https://firabaseapp-fd152.firebaseio.com",
+    "project_id": "firabaseapp-fd152",
+    "storage_bucket": "firabaseapp-fd152.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038753180411:android:4ffd6eb68139af69",
+        "android_client_info": {
+          "package_name": "com.example.felipesantos.fireabaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038753180411-brgp60rh0hubdrm7s0j04h3ublvr55bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.felipesantos.fireabaseapp",
+            "certificate_hash": "36184b081e73bc14e821b8788636201817800c77"
+          }
+        },
+        {
+          "client_id": "1038753180411-r873vnmab2svl24d3qfbrlif1lojiof8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJND3kzy-dvlMPHoLvqq944BuiS1L-W60"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038753180411-r873vnmab2svl24d3qfbrlif1lojiof8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
