@@ -35,9 +35,12 @@ public class Loginctivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginctivity);
 
+        getSupportActionBar().setTitle("Já Tenho uma conta");
+
         campoEmail = findViewById(R.id.editEmail);
         campoSenha = findViewById(R.id.editSenha);
         btEntrar = findViewById(R.id.buttonEntrar);
+        progressBar = findViewById(R.id.progressBar);
 
         progressBar.setVisibility(View.INVISIBLE);
 
