@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.felipesantos.organizzeclone.R;
+import com.example.felipesantos.organizzeclone.adapter.Adapter;
 import com.example.felipesantos.organizzeclone.config.ConfiguracaoFirebase;
 import com.example.felipesantos.organizzeclone.helper.Base64Custom;
 import com.example.felipesantos.organizzeclone.model.Usuario;
@@ -32,11 +35,17 @@ public class PrincipalActivity extends AppCompatActivity {
 
     private MaterialCalendarView calendarView;
     private TextView textSaudacao, textSaldo;
-    private double despesaTotal =0.0;
-    private double receitaTotal =0.0;
-    private double resumoUsuario =0.0;
+    private double despesaTotal = 0.0;
+    private double receitaTotal = 0.0;
+    private double resumoUsuario = 0.0;
+    private RecyclerView recyclerViewMovimentos;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adapter;
+
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabase();
+    private DatabaseReference usuarioRef;
+    private ValueEventListener valueEventListenerUsuario;
 
 
     @Override
@@ -50,13 +59,14 @@ public class PrincipalActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendarView);
         textSaudacao = findViewById(R.id.textSaudacao);
         textSaldo = findViewById(R.id.textSaldo);
+        recyclerViewMovimentos = findViewById(R.id.recyclerMovimentos);
 
 
 //        Configurar Calendario
-        CharSequence months[] = {"Janeiro","Fevereiro","Março", "Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"};
+        CharSequence months[] = {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
         calendarView.setTitleMonths(months);
 
-        CharSequence weekDays[] = {"Dom","Seg","Ter","Qua","Qui","Sex","Sab"};
+        CharSequence weekDays[] = {"Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"};
         calendarView.setWeekDayLabels(weekDays);
 
 
@@ -67,18 +77,31 @@ public class PrincipalActivity extends AppCompatActivity {
             }
         });
 
-//        Recupera resumo de valores do usuario
-        reuperarResumo();
+//            Configurar Adapter
+        adapter = new Adapter();
 
+
+//            Configurar RecyclerView
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewMovimentos.setLayoutManager(layoutManager);
+        recyclerViewMovimentos.setAdapter(adapter);
+        recyclerViewMovimentos.setHasFixedSize(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //        Recupera resumo de valores do usuario
+        reuperarResumo();
     }
 
     public void reuperarResumo() {
         String emailUssuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64(emailUssuario);
-        DatabaseReference usuarioRef = databaseReference.child("usuarios")
+        usuarioRef = databaseReference.child("usuarios")
                 .child(idUsuario);
 
-        usuarioRef.addValueEventListener(new ValueEventListener() {
+        valueEventListenerUsuario = usuarioRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
@@ -110,7 +133,7 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menuSair:
                 autenticacao.signOut();
                 finish();
@@ -121,13 +144,19 @@ public class PrincipalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void  adicionarDespesa(View v){
+    public void adicionarDespesa(View v) {
 
-        startActivity(new Intent(this,DespesasActivity.class));
+        startActivity(new Intent(this, DespesasActivity.class));
 
     }
-    public void  adicionarReceita(View v){
-        startActivity(new Intent(this,ReceitasActivity.class));
+
+    public void adicionarReceita(View v) {
+        startActivity(new Intent(this, ReceitasActivity.class));
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        usuarioRef.removeEventListener(valueEventListenerUsuario);
+    }
 }
